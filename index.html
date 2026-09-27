@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aprende a desarrollar páginas web desde cero - ITC Virtual Store">
+  <meta name="author" content="Daniel Salinas">
+  <title>Papelería & Útiles ETITC</title>
+  
+  <!-- Favicon (Asegúrate de que la carpeta sea 'images' o 'imagenes' según tu estructura real) -->
+  <link rel="icon" type="image/png" href="images/ETITC.png">
+  
+  <!-- Hojas de estilo y fuentes -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome -->
+  <script src="https://kit.fontawesome.com/73f851add2.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- Header & Menu Navigation -->
+  <header class="header">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">
+        <img src="images/ETITC.png" alt="Logo ETITC">
+        ETITC <span>Store</span>
+      </a>
+      
+      <input type="checkbox" id="menu">
+      <label for="menu" class="menu-icono"><i class="fa-solid fa-bars"></i></label>
+      
+      <nav class="navbar">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="#beneficios">Beneficios</a></li>
+          <li><a href="#productos">Catálogo</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Beneficios Section -->
+    <section id="beneficios" class="beneficios">
+      <h2>¿Por qué elegirnos?</h2>
+      <div class="beneficios-grid">
+        <div class="beneficio-card">
+          <i class="fa-solid fa-truck-fast"></i>
+          <h3>Envíos Rápidos</h3>
+          <p>Entregas directas en el campus, solo tienes que ir a recogerlo.</p>
+        </div>
+        <div class="beneficio-card">
+          <i class="fa-solid fa-shield-halved"></i>
+          <h3>Calidad Garantizada</h3>
+          <p>Las mejores marcas de papelería seleccionadas para ti.</p>
+        </div>
+        <div class="beneficio-card">
+          <i class="fa-solid fa-wallet"></i>
+          <h3>Precios Accesibles</h3>
+          <p>Descuentos especiales para estudiantes de la comunidad ETITC.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Productos Section -->
+    <section class="planes-section">
+      <h2>Nuestros Productos</h2>
+      <div id="productos" class="productos-container">
+        <p class="cargando">Cargando productos de papelería...</p>
+      </div>
+    </section>
+
+    <!-- Formulario de Contacto -->
+    <section id="contacto" class="contact">
+      <div class="contact-content">
+        <h2>Suscríbete a nuestras ofertas</h2>
+        <form>
+          <input type="email" placeholder="Ingresa tu correo electrónico" required>
+          <button type="submit" class="btn-submit">Suscribirme</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Carrito Flotante -->
+    <div id="carrito-widget" class="carrito-widget">
+      <button id="btn-abrir-carrito" class="btn-carrito" aria-label="Abrir carrito">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="carrito-contador">0</span>
+      </button>
+
+      <div id="carrito-modal" class="carrito-modal oculto">
+        <h3>Tu Carrito</h3>
+        <ul id="carrito-lista"></ul>
+        <div class="carrito-resumen">
+          <p>Total: <strong id="carrito-total">$0</strong></p>
+          <button id="btn-pagar" class="btn-primary">Pagar (Modo Prueba)</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer-container">
+    <p>&copy; Jimmy Beltran - Ivan Salas ITC Virtual Store. Todos los derechos reservados.</p>
+  </footer>
+
+  <!-- Template para Tarjetas de Productos -->
+  <template id="producto-template">
+    <article class="producto-card">
+      <img src="" alt="Producto" />
+      <div class="producto-info">
+        <h3 class="producto-title"></h3>
+        <p class="producto-precio"></p>
+        <button class="btn-comprar"><i class="fa-solid fa-cart-shopping"></i> Agregar al Carrito</button>
+      </div>
+    </article>
+  </template>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="./js/script.js"></script>
+</body>
+</html>

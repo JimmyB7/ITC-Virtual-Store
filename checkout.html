@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pago con Nequi | ETITC Store</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/73f851add2.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <main class="container">
+    <section class="checkout-section">
+      <h2><i class="fa-solid fa-qrcode"></i> Pago con Nequi</h2>
+      <p class="checkout-subtitle">
+        Escanea el código QR o realiza la transferencia al número de pruebas para validar tu pedido.
+      </p>
+
+      <div class="qr-container">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Nequi-ETITC-Store" alt="Código QR Nequi">
+        
+        <div class="nequi-alt-info">
+          <p>¿Problemas con el QR?</p>
+          <p>Transfiere directo al Nequi: <strong class="nequi-phone">300 123 4567</strong></p>
+        </div>
+      </div>
+      
+      <div class="resumen-compra">
+        <p>Monto a Transferir: <strong id="checkout-total" class="total-monto">$0</strong></p>
+      </div>
+
+      <form id="checkout-form">
+        <div class="form-group">
+          <label for="nombre">Nombre Completo</label>
+          <input type="text" id="nombre" placeholder="Ej. Juan Pérez" required>
+        </div>
+
+        <div class="form-group">
+          <label for="correo">Correo Institucional (@itc.edu.co)</label>
+          <input 
+            type="email" 
+            id="correo" 
+            placeholder="usuario@itc.edu.co" 
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="comprobante">Número de Aprobación / Referencia Nequi</label>
+          <input type="text" id="comprobante" placeholder="Ej. M1234567" minlength="6" required>
+        </div>
+
+        <button type="submit" id="btn-confirmar-pago" class="btn-nequi">Verificar y Finalizar Pago</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="./js/checkout.js"></script>
+</body>
+</html>

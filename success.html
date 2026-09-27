@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Pago Exitoso! | ETITC Store</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/73f851add2.js" crossorigin="anonymous"></script>
+  <style>
+    .success-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 85vh;
+      text-align: center;
+      padding: 20px;
+    }
+    .success-icon {
+      font-size: 5rem;
+      color: var(--green-primary);
+      margin-bottom: 20px;
+    }
+    .success-title {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+    .success-message {
+      color: var(--text-muted);
+      margin-bottom: 30px;
+      max-width: 500px;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container success-container">
+    <i class="fa-solid fa-circle-check success-icon"></i>
+    <h1 class="success-title">¡Pago Realizado con Éxito!</h1>
+    <p class="success-message">Tu orden de prueba ha sido registrada en la base de datos de Supabase. Gracias por tu compra.</p>
+    <a href="index.html" class="btn-primary">Volver a la Tienda</a>
+  </main>
+
+</body>
+</html>
