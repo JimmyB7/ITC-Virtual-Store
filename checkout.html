@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#12181b">
   <title>Pago con Nequi | ETITC Store</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/73f851add2.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
   <main class="container">
-    <section class="checkout-section">
+    <section class="checkout-section reveal" data-tilt data-tilt-max="3" data-tilt-scale="1.01" data-tilt-pausar-foco>
       <h2><i class="fa-solid fa-qrcode"></i> Pago con Nequi</h2>
       <p class="checkout-subtitle">
         Escanea el código QR o realiza la transferencia al número de pruebas para validar tu pedido.
@@ -35,17 +36,21 @@
       <form id="checkout-form">
         <div class="form-group">
           <label for="nombre">Nombre Completo</label>
-          <input type="text" id="nombre" placeholder="Ej. Juan Pérez" required>
+          <input type="text" id="nombre" placeholder="Ej. Juan Pérez" autocomplete="name" required>
         </div>
 
         <div class="form-group">
-          <label for="correo">Correo Institucional (@itc.edu.co)</label>
+          <label for="correo">Correo Electrónico</label>
           <input 
             type="email" 
             id="correo" 
-            placeholder="usuario@itc.edu.co" 
+            placeholder="tucorreo@gmail.com"
+            autocomplete="email"
+            inputmode="email"
+            aria-describedby="correo-error"
             required
           >
+          <small id="correo-error" class="form-error" role="alert"></small>
         </div>
 
         <div class="form-group">
@@ -55,6 +60,8 @@
 
         <button type="submit" id="btn-confirmar-pago" class="btn-nequi">Verificar y Finalizar Pago</button>
       </form>
+
+      <a href="index.html" class="volver-tienda"><i class="fa-solid fa-arrow-left"></i> Volver a la tienda</a>
     </section>
   </main>
 

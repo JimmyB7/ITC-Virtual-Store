@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+/* =====================================================================
+   ETITC Virtual Store — style.css
+   Fuente Poppins: se carga con <link> en cada HTML (sin @import bloqueante).
+   Animaciones: solo transform / opacity (GPU). Efectos pesados se reducen en móvil.
+   ===================================================================== */
 
 :root {
   --green-primary: #2ecc71;
@@ -10,6 +14,13 @@
   --text-muted: #a4b0be;
   --border-color: #2c3a47;
   --border-radius: 12px;
+
+  /* Nuevos tokens */
+  --nequi: #e3007b;
+  --nequi-dark: #b00060;
+  --glass-bg: rgba(26, 33, 38, 0.62);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
@@ -20,11 +31,49 @@
   list-style: none;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
   line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ---------- Fondo "aurora" (2 orbes con deriva suave, solo transform) ---------- */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  width: 70vmax;
+  height: 70vmax;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+body::before {
+  top: -28vmax;
+  left: -22vmax;
+  background: radial-gradient(circle, rgba(46, 204, 113, 0.2), transparent 65%);
+  animation: deriva 24s ease-in-out infinite alternate;
+}
+
+body::after {
+  bottom: -32vmax;
+  right: -26vmax;
+  background: radial-gradient(circle, rgba(227, 0, 123, 0.13), transparent 65%);
+  animation: deriva 30s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes deriva {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(9vmax, 6vmax, 0) scale(1.15); }
 }
 
 .container {
@@ -33,17 +82,22 @@ body {
   padding: 0 20px;
 }
 
-/* Header & Menu Nav */
+/* ===================== Header & Menu Nav (glass) ===================== */
 .header {
-  background: linear-gradient(135deg, #182026 0%, var(--bg-color) 100%);
-  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  background: rgba(18, 24, 27, 0.65);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0;
+  padding: 14px 0;
 }
 
 .logo {
@@ -63,75 +117,260 @@ body {
   width: 45px;
   height: 45px;
   object-fit: contain;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.logo:hover img {
+  transform: rotateY(360deg);
 }
 
 .navbar ul {
   display: flex;
-  gap: 20px;
+  gap: 8px;
 }
 
 .navbar ul li a {
+  position: relative;
+  display: block;
+  padding: 6px 14px;
   color: var(--text-color);
   font-weight: 500;
-  transition: color 0.3s;
+  border-radius: 20px;
+  transition: color 0.3s, background-color 0.3s;
 }
 
 .navbar ul li a:hover {
   color: var(--green-primary);
+  background-color: rgba(46, 204, 113, 0.1);
 }
 
 #menu, .menu-icono {
   display: none;
 }
 
-/* Hero Section */
+/* ===================== Hero 3D ===================== */
 .hero {
-  padding: 80px 0;
-  text-align: center;
+  padding: 70px 0 40px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 40px;
+}
+
+.hero-txt {
+  text-align: left;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  margin-bottom: 18px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--green-primary);
+  background: rgba(46, 204, 113, 0.1);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  border-radius: 25px;
 }
 
 .hero-txt h1 {
-  font-size: 2.8rem;
-  margin-bottom: 15px;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  line-height: 1.1;
+  margin-bottom: 18px;
 }
 
 .hero-txt h1 span {
+  background: linear-gradient(90deg, var(--green-primary), #7bed9f);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   color: var(--green-primary);
 }
 
 .hero-txt p {
   font-size: 1.1rem;
   color: var(--text-muted);
-  max-width: 600px;
-  margin: 0 auto 30px auto;
+  max-width: 520px;
+  margin: 0 0 30px 0;
 }
 
+/* Escena 3D: pila de capas de cristal */
+.hero-3d {
+  perspective: 1100px;
+  height: 380px;
+  display: grid;
+  place-items: center;
+}
+
+.hero-float {
+  animation: flotar 7s ease-in-out infinite;
+}
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(-8px); }
+  50%      { transform: translateY(10px); }
+}
+
+.hero-stack {
+  --hrx: -12deg;
+  --hry: 18deg;
+  position: relative;
+  width: 270px;
+  height: 270px;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--hrx)) rotateY(var(--hry));
+  transition: transform 0.35s ease-out;
+}
+
+.hero-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  border: 1px solid var(--glass-border);
+}
+
+.hero-layer.l1 {
+  transform: translateZ(-90px) scale(1.08);
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.5), rgba(24, 40, 30, 0.2));
+  box-shadow: 0 40px 80px rgba(46, 204, 113, 0.18);
+}
+
+.hero-layer.l2 {
+  transform: translateZ(-30px);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 / 28px 28px,
+    rgba(26, 33, 38, 0.7);
+}
+
+.hero-layer.l3 {
+  inset: 26px;
+  transform: translateZ(40px);
+  display: grid;
+  place-items: center;
+  font-size: 4.2rem;
+  color: var(--green-primary);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03));
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+.hero-chip {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  font-size: 1.3rem;
+  color: #fff;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--green-primary), var(--green-hover));
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.4);
+  transform: translateZ(120px);
+}
+
+.hero-chip.c1 { top: -14px; right: -18px; }
+.hero-chip.c2 { bottom: 26px; left: -26px; background: linear-gradient(135deg, #e3007b, #ff5fb0); transform: translateZ(95px); }
+.hero-chip.c3 { bottom: -18px; right: 34px; background: linear-gradient(135deg, #3498db, #74b9ff); transform: translateZ(140px); }
+
+/* ===================== Botones ===================== */
 .btn-primary {
+  position: relative;
+  overflow: hidden;
   display: inline-block;
   padding: 12px 32px;
-  background-color: var(--green-primary);
+  background: linear-gradient(135deg, var(--green-primary), var(--green-hover));
   color: #ffffff;
   border-radius: 25px;
   font-weight: 600;
-  transition: background-color 0.3s ease;
   border: none;
   cursor: pointer;
   text-align: center;
+  box-shadow: 0 8px 20px rgba(46, 204, 113, 0.25);
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s ease;
+}
+
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
 }
 
 .btn-primary:hover {
-  background-color: var(--green-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(46, 204, 113, 0.35);
 }
 
-/* Beneficios */
+.btn-primary:hover::after {
+  left: 130%;
+  transition: left 0.7s ease;
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ===================== Tilt genérico ===================== */
+[data-tilt] {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1);
+  transition: transform 0.6s var(--ease-out), box-shadow 0.4s ease, border-color 0.3s ease;
+}
+
+[data-tilt].is-tilting {
+  transition: transform 0.08s linear, box-shadow 0.25s ease, border-color 0.3s ease;
+  will-change: transform;
+}
+
+/* Brillo (glare) que sigue al cursor */
+[data-tilt]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.16), transparent 55%);
+  transition: opacity 0.35s ease;
+}
+
+[data-tilt].is-tilting::after {
+  opacity: 1;
+}
+
+/* ===================== Beneficios ===================== */
 .beneficios {
   padding: 60px 0;
   text-align: center;
 }
 
-.beneficios h2 {
+.beneficios h2,
+.planes-section h2 {
+  position: relative;
   font-size: 2rem;
-  margin-bottom: 40px;
+  margin-bottom: 48px;
+}
+
+.beneficios h2::after,
+.planes-section h2::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 4px;
+  margin: 12px auto 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--green-primary), #7bed9f);
 }
 
 .beneficios-grid {
@@ -143,57 +382,94 @@ body {
 .beneficio-card {
   flex: 1;
   min-width: 250px;
-  background: var(--card-bg);
-  padding: 30px 20px;
-  border-radius: var(--border-radius);
-  border: 1px solid var(--border-color);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  background: linear-gradient(160deg, rgba(36, 46, 53, 0.75), rgba(22, 28, 33, 0.8));
+  padding: 34px 22px;
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--sx, 0px) var(--sy, 10px) 30px rgba(0, 0, 0, 0.35);
 }
 
 .beneficio-card i {
+  display: inline-block;
   font-size: 2.5rem;
   color: var(--green-primary);
   margin-bottom: 15px;
+  transition: transform 0.4s var(--ease-out), text-shadow 0.4s ease;
 }
 
-/* Catálogo de Productos */
+.beneficio-card.is-tilting i {
+  transform: translateZ(46px);
+  text-shadow: 0 0 22px rgba(46, 204, 113, 0.7);
+}
+
+.beneficio-card h3 {
+  transition: transform 0.4s var(--ease-out);
+}
+
+.beneficio-card.is-tilting h3 {
+  transform: translateZ(24px);
+}
+
+/* ===================== Catálogo de Productos ===================== */
 .planes-section {
   padding: 60px 0;
 }
 
 .planes-section h2 {
   text-align: center;
-  font-size: 2rem;
-  margin-bottom: 40px;
 }
 
 .productos-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 25px;
+  gap: 28px;
+}
+
+.cargando {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-muted);
+  padding: 30px 0;
 }
 
 .producto-card {
-  background: var(--card-bg);
-  border-radius: var(--border-radius);
-  border: 1px solid var(--border-color);
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  background: linear-gradient(160deg, rgba(36, 46, 53, 0.85), rgba(22, 28, 33, 0.92));
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: var(--sx, 0px) var(--sy, 10px) 30px rgba(0, 0, 0, 0.4);
 }
 
-.producto-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--green-primary);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+.producto-card.is-tilting {
+  border-color: rgba(46, 204, 113, 0.65);
+  box-shadow:
+    var(--sx, 0px) var(--sy, 18px) 40px rgba(0, 0, 0, 0.55),
+    0 0 36px rgba(46, 204, 113, 0.14);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .producto-card:not(.is-tilting):hover {
+    border-color: rgba(46, 204, 113, 0.5);
+  }
+}
+
+.producto-media {
+  overflow: hidden;
+  border-radius: 15px 15px 0 0;
+  background: #0f1417;
 }
 
 .producto-card img {
+  display: block;
   width: 100%;
   height: 200px;
   object-fit: cover;
+  transition: transform 0.7s var(--ease-out);
+}
+
+.producto-card.is-tilting img {
+  transform: scale(1.08);
 }
 
 .producto-info {
@@ -207,6 +483,7 @@ body {
   font-size: 1.1rem;
   margin-bottom: 10px;
   color: var(--text-color);
+  transition: transform 0.4s var(--ease-out);
 }
 
 .producto-precio {
@@ -214,35 +491,78 @@ body {
   color: var(--green-primary);
   font-weight: 700;
   margin-bottom: 15px;
+  transition: transform 0.4s var(--ease-out), text-shadow 0.4s ease;
 }
+
+/* Elementos que "saltan" hacia el usuario al inclinar la tarjeta */
+.producto-card.is-tilting .producto-title { transform: translateZ(26px); }
+.producto-card.is-tilting .producto-precio { transform: translateZ(38px); text-shadow: 0 0 18px rgba(46, 204, 113, 0.55); }
+.producto-card.is-tilting .btn-comprar { transform: translateZ(30px); }
 
 .btn-comprar {
   margin-top: auto;
-  padding: 10px;
-  background-color: var(--green-primary);
+  padding: 11px;
+  background: linear-gradient(135deg, var(--green-primary), var(--green-hover));
   color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  box-shadow: 0 8px 18px rgba(46, 204, 113, 0.2);
+  transition: transform 0.4s var(--ease-out), box-shadow 0.3s, filter 0.3s;
 }
 
 .btn-comprar:hover {
-  background-color: var(--green-hover);
+  filter: brightness(1.1);
+  box-shadow: 0 12px 24px rgba(46, 204, 113, 0.35);
 }
 
-/* Contacto */
+.btn-comprar:active {
+  filter: brightness(0.95);
+}
+
+.btn-comprar.agregado {
+  animation: pulso 0.5s var(--ease-out);
+}
+
+@keyframes pulso {
+  0%   { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+  100% { box-shadow: 0 0 0 16px rgba(46, 204, 113, 0); }
+}
+
+/* ===================== Entrada animada (reveal) ===================== */
+.js-3d .reveal {
+  opacity: 0;
+}
+
+.js-3d .reveal.visible {
+  opacity: 1;
+  /* "backwards": al terminar no retiene el transform, así el tilt inline sigue funcionando */
+  animation: entrada 0.85s var(--ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+@keyframes entrada {
+  from { opacity: 0; transform: perspective(900px) translateY(36px) rotateX(-12deg) scale(0.96); }
+  to   { opacity: 1; transform: perspective(900px) translateY(0) rotateX(0deg) scale(1); }
+}
+
+/* ===================== Contacto ===================== */
 .contact {
   padding: 60px 0;
 }
 
 .contact-content {
-  background: var(--green-light);
-  border: 1px solid var(--green-primary);
-  border-radius: var(--border-radius);
-  padding: 40px 20px;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(46, 204, 113, 0.18), transparent 55%),
+    var(--glass-bg);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(46, 204, 113, 0.45);
+  border-radius: 18px;
+  padding: 44px 20px;
   text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 }
 
 .contact-content h2 {
@@ -260,11 +580,17 @@ body {
 .contact input {
   flex-grow: 1;
   padding: 12px 20px;
-  background-color: var(--bg-color);
+  background-color: rgba(18, 24, 27, 0.8);
   color: var(--text-color);
   border: 1px solid var(--border-color);
   border-radius: 25px;
   outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.contact input:focus {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.15);
 }
 
 .contact input::placeholder {
@@ -273,36 +599,38 @@ body {
 
 .btn-submit {
   padding: 12px 25px;
-  background-color: var(--green-primary);
+  background: linear-gradient(135deg, var(--green-primary), var(--green-hover));
   color: white;
   border: none;
   border-radius: 25px;
   cursor: pointer;
   font-weight: 600;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
 }
 
 .btn-submit:hover {
-  background-color: var(--green-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(46, 204, 113, 0.3);
 }
 
-/* Footer */
+/* ===================== Footer ===================== */
 .footer-container {
   text-align: center;
   padding: 30px 0;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--glass-border);
   color: var(--text-muted);
 }
 
-/* Carrito Flotante */
+/* ===================== Carrito Flotante ===================== */
 .carrito-widget {
   position: fixed;
-  bottom: 25px;
+  bottom: calc(25px + env(safe-area-inset-bottom, 0px));
   right: 25px;
   z-index: 1000;
 }
 
 .btn-carrito {
-  background-color: var(--green-primary);
+  background: linear-gradient(135deg, var(--green-primary), var(--green-hover));
   color: #fff;
   border: none;
   width: 60px;
@@ -311,7 +639,31 @@ body {
   font-size: 1.4rem;
   cursor: pointer;
   position: relative;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  box-shadow: 0 10px 25px rgba(46, 204, 113, 0.35), 0 4px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.35s var(--ease-out);
+}
+
+.btn-carrito::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--green-primary);
+  animation: anillo 2.8s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes anillo {
+  0%   { transform: scale(1);   opacity: 0.7; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+.btn-carrito:hover {
+  transform: scale(1.1) rotate(-6deg);
+}
+
+.btn-carrito:active {
+  transform: scale(0.95);
 }
 
 #carrito-contador {
@@ -324,18 +676,38 @@ body {
   padding: 2px 8px;
   font-size: 0.8rem;
   font-weight: bold;
+  box-shadow: 0 4px 10px rgba(231, 76, 60, 0.5);
+}
+
+#carrito-contador.bump {
+  animation: rebote 0.45s var(--ease-out);
+}
+
+@keyframes rebote {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.5); }
+  100% { transform: scale(1); }
 }
 
 .carrito-modal {
   position: absolute;
-  bottom: 70px;
+  bottom: 74px;
   right: 0;
-  width: 340px;
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  width: min(340px, calc(100vw - 50px));
+  background-color: var(--glass-bg);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  transform-origin: bottom right;
+  animation: abrirCarrito 0.4s var(--ease-out);
+}
+
+@keyframes abrirCarrito {
+  from { opacity: 0; transform: perspective(700px) rotateX(-16deg) translateY(16px) scale(0.94); }
+  to   { opacity: 1; transform: perspective(700px) rotateX(0deg) translateY(0) scale(1); }
 }
 
 .carrito-modal.oculto {
@@ -344,7 +716,7 @@ body {
 
 .carrito-modal h3 {
   margin-bottom: 15px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--glass-border);
   padding-bottom: 10px;
 }
 
@@ -375,15 +747,16 @@ body {
   color: #e74c3c;
   cursor: pointer;
   font-size: 1.1rem;
-  transition: color 0.2s;
+  transition: color 0.2s, transform 0.2s;
 }
 
 .btn-eliminar-uno:hover {
-  color: #c0392b;
+  color: #ff6b5b;
+  transform: scale(1.2);
 }
 
 .carrito-resumen {
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--glass-border);
   padding-top: 15px;
   text-align: right;
 }
@@ -392,29 +765,47 @@ body {
   width: 100%;
   margin-top: 10px;
   padding: 10px;
-  background-color: var(--green-primary);
   color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+  border-radius: 8px;
   font-weight: 600;
 }
 
-/* --- ESTILOS CHECKOUT NEQUI --- */
+/* ===================== CHECKOUT NEQUI (glass 3D) ===================== */
 .checkout-section {
+  position: relative;
   max-width: 550px;
   margin: 40px auto;
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 30px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  background:
+    radial-gradient(circle at 85% 0%, rgba(227, 0, 123, 0.16), transparent 50%),
+    var(--glass-bg);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: var(--sx, 0px) var(--sy, 24px) 60px rgba(0, 0, 0, 0.55);
+}
+
+/* Borde luminoso con degradado */
+.checkout-section::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(145deg, rgba(227, 0, 123, 0.7), transparent 40%, transparent 60%, rgba(46, 204, 113, 0.5));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
 }
 
 .checkout-section h2 {
+  display: block;
   margin-bottom: 10px;
   text-align: center;
-  color: #e3007b;
+  color: var(--nequi);
+  transition: transform 0.4s var(--ease-out);
 }
 
 .checkout-subtitle {
@@ -428,12 +819,15 @@ body {
   text-align: center;
   background-color: #fff;
   padding: 15px;
-  border-radius: 12px;
+  border-radius: 14px;
   margin: 15px 0;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+  transition: transform 0.45s var(--ease-out);
 }
 
 .qr-container img {
   width: 200px;
+  max-width: 100%;
   height: 200px;
   object-fit: contain;
 }
@@ -447,7 +841,7 @@ body {
 }
 
 .nequi-phone {
-  color: #e3007b;
+  color: var(--nequi);
   font-size: 1.1rem;
 }
 
@@ -463,52 +857,156 @@ body {
 
 .form-group input {
   width: 100%;
-  padding: 12px;
-  background-color: var(--bg-color);
+  padding: 12px 14px;
+  background-color: rgba(18, 24, 27, 0.75);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 10px;
   color: var(--text-color);
   font-size: 0.95rem;
   outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .form-group input:focus {
-  border-color: #e3007b;
+  border-color: var(--nequi);
+  box-shadow: 0 0 0 4px rgba(227, 0, 123, 0.16);
+}
+
+.form-group input.input-error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.18);
+  animation: temblor 0.4s ease;
+}
+
+@keyframes temblor {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
+.form-error {
+  display: block;
+  min-height: 1.2em;
+  margin-top: 6px;
+  font-size: 0.82rem;
+  color: #ff7675;
 }
 
 .resumen-compra {
-  background-color: var(--bg-color);
+  background-color: rgba(18, 24, 27, 0.7);
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 15px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--glass-border);
   text-align: center;
+  transition: transform 0.45s var(--ease-out);
 }
 
 .total-monto {
-  color: #e3007b;
+  color: var(--nequi);
   font-size: 1.2rem;
 }
 
 .btn-nequi {
-  background-color: #e3007b;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--nequi), #ff3fa0);
   color: white;
   border: none;
-  padding: 12px;
+  padding: 13px;
   border-radius: 25px;
   font-weight: 600;
   width: 100%;
   cursor: pointer;
   font-size: 1rem;
-  transition: background 0.3s;
+  box-shadow: 0 12px 26px rgba(227, 0, 123, 0.35);
+  transition: transform 0.45s var(--ease-out), box-shadow 0.3s, filter 0.3s;
 }
 
-.btn-nequi:hover {
-  background-color: #b00060;
+.btn-nequi:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 16px 32px rgba(227, 0, 123, 0.5);
 }
 
-/* Responsive */
+.btn-nequi:active:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+.btn-nequi:disabled {
+  cursor: progress;
+  opacity: 0.85;
+}
+
+/* Barrido de luz mientras se verifica el pago */
+.btn-nequi:disabled::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: barrido 1.2s linear infinite;
+}
+
+@keyframes barrido {
+  to { left: 130%; }
+}
+
+.volver-tienda {
+  display: block;
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  transition: color 0.3s;
+}
+
+.volver-tienda:hover {
+  color: var(--green-primary);
+}
+
+/* Elementos del checkout que "saltan" al inclinar */
+.checkout-section.is-tilting h2 { transform: translateZ(30px); }
+.checkout-section.is-tilting .qr-container { transform: translateZ(42px); }
+.checkout-section.is-tilting .resumen-compra { transform: translateZ(22px); }
+.checkout-section.is-tilting .btn-nequi { transform: translateZ(28px); }
+
+/* ===================== Responsive ===================== */
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .hero-txt {
+    text-align: center;
+  }
+
+  .hero-txt p {
+    margin: 0 auto 30px auto;
+  }
+
+  .hero-3d {
+    height: 330px;
+  }
+}
+
 @media (max-width: 768px) {
+  /* Menos blur = menos coste de GPU en móviles */
+  .header,
+  .contact-content,
+  .carrito-modal,
+  .checkout-section {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  body::before,
+  body::after {
+    animation-duration: 40s;
+  }
+
   .menu-icono {
     display: block;
     font-size: 24px;
@@ -518,13 +1016,13 @@ body {
 
   .navbar {
     position: absolute;
-    top: 70px;
+    top: 100%;
     left: 0;
     right: 0;
-    background-color: var(--card-bg);
-    border-bottom: 1px solid var(--border-color);
+    background-color: rgba(26, 33, 38, 0.96);
+    border-bottom: 1px solid var(--glass-border);
     display: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
   }
 
   .navbar ul {
@@ -539,5 +1037,48 @@ body {
 
   .contact form {
     flex-direction: column;
+  }
+
+  .hero {
+    padding-top: 40px;
+  }
+
+  .checkout-section {
+    margin: 24px auto;
+    padding: 24px 18px;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero-3d {
+    height: 270px;
+    transform: scale(0.74);
+  }
+}
+
+/* En táctil no hay cursor: la escena del hero gira sola, suave */
+@media (hover: none), (pointer: coarse) {
+  .hero-stack {
+    animation: giro 12s ease-in-out infinite;
+  }
+}
+
+@keyframes giro {
+  0%, 100% { transform: rotateX(-12deg) rotateY(-20deg); }
+  50%      { transform: rotateX(-8deg) rotateY(22deg); }
+}
+
+/* Accesibilidad: sin movimiento si el usuario lo pide */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .js-3d .reveal {
+    opacity: 1;
   }
 }

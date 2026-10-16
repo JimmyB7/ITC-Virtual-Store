@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { initEfectos3D, initTilt, observarReveal } from './efectos3d.js';
 
 const SUPABASE_URL = 'https://aeocbyaaeolffaccsfgj.supabase.co'; 
 const SUPABASE_ANON_KEY = 'sb_publishable_jw_FMN_9x6V75C3DDx9-KQ__4Q3tbbW';
@@ -34,8 +35,9 @@ async function cargarProductos() {
             return;
         }
 
-        productos.forEach(producto => {
+        productos.forEach((producto, index) => {
             const clone = productoTemplate.content.cloneNode(true);
+            const card = clone.querySelector('.producto-card');
 
             clone.querySelector('img').src = producto.imagen || 'images/default.png';
             clone.querySelector('img').alt = producto.nombre;
@@ -45,15 +47,28 @@ async function cargarProductos() {
             const btnComprar = clone.querySelector('.btn-comprar');
             btnComprar.addEventListener('click', () => {
                 agregarAlCarrito(producto);
+                animarBotonAgregado(btnComprar);
             });
 
+            // Efectos 3D: entrada escalonada + tilt (el stagger se limita para listas largas)
+            card.style.setProperty('--i', Math.min(index, 8));
+
             productosContainer.appendChild(clone);
+
+            initTilt(card, { max: 9, scale: 1.035 });
+            observarReveal(card);
         });
 
     } catch (error) {
         console.error('Error al cargar productos:', error);
         productosContainer.innerHTML = '<p class="cargando">Error al conectar con la base de datos de Supabase. Revisa tus credenciales.</p>';
     }
+}
+
+function animarBotonAgregado(btn) {
+    btn.classList.remove('agregado');
+    void btn.offsetWidth; // reinicia la animación si se hace clic varias veces seguidas
+    btn.classList.add('agregado');
 }
 
 function agregarAlCarrito(producto) {
@@ -71,6 +86,11 @@ function agregarAlCarrito(producto) {
     }
     
     actualizarCarrito();
+
+    // Pequeño rebote del contador del carrito
+    carritoContador.classList.remove('bump');
+    void carritoContador.offsetWidth;
+    carritoContador.classList.add('bump');
 }
 
 function disminuirCantidad(id) {
@@ -100,17 +120,20 @@ function actualizarCarrito() {
         const divItem = document.createElement('div');
         divItem.classList.add('item-carrito');
 
-        divItem.innerHTML = `
-            <span>${item.nombre} (x${item.cantidad}) - $${(item.precio * item.cantidad).toLocaleString()}</span>
-            <button class="btn-eliminar-uno" title="Restar uno" type="button">
-                <i class="fa-solid fa-trash-can"></i>
-            </button>
-        `;
+        // El nombre se inserta con textContent (evita inyección de HTML desde la BD)
+        const spanNombre = document.createElement('span');
+        spanNombre.textContent = `${item.nombre} (x${item.cantidad}) - $${(item.precio * item.cantidad).toLocaleString()}`;
 
-        divItem.querySelector('.btn-eliminar-uno').addEventListener('click', () => {
+        const btnRestar = document.createElement('button');
+        btnRestar.className = 'btn-eliminar-uno';
+        btnRestar.title = 'Restar uno';
+        btnRestar.type = 'button';
+        btnRestar.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+        btnRestar.addEventListener('click', () => {
             disminuirCantidad(item.id);
         });
 
+        divItem.append(spanNombre, btnRestar);
         carritoLista.appendChild(divItem);
     });
 
@@ -134,6 +157,7 @@ function procederAlCheckout(e) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initEfectos3D();
     cargarProductos();
     actualizarCarrito();
 

@@ -1,10 +1,13 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import SUPABASE_KEYS from "../assets/Keys.js";
+import { initEfectos3D } from './efectos3d.js';
 
 const supabase = createClient(SUPABASE_KEYS.url, SUPABASE_KEYS.anonKey);
 
 const $form = document.getElementById("checkout-form");
 const $totalTxt = document.getElementById("checkout-total");
+const $correo = document.getElementById("correo");
+const $correoError = document.getElementById("correo-error");
 
 // Recuperar productos guardados
 const carrito = JSON.parse(localStorage.getItem("carritoETITC")) || [];
@@ -27,17 +30,43 @@ if ($totalTxt) {
   $totalTxt.textContent = FormatoDeMoneda(totalCalculado);
 }
 
+// Efectos 3D del checkout (tilt suave; se pausa mientras el usuario escribe)
+initEfectos3D();
+
+/* ---------- Validación de correo: cualquier dominio, solo formato básico ---------- */
+// usuario@dominio.ext  (sin espacios, un solo @, dominio con al menos un punto y extensión de 2+ letras)
+const REGEX_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+const esCorreoValido = (correo) => correo.length <= 254 && REGEX_CORREO.test(correo);
+
+function mostrarErrorCorreo(mensaje) {
+  $correoError.textContent = mensaje;
+  $correo.setAttribute("aria-invalid", "true");
+  $correo.classList.remove("input-error");
+  void $correo.offsetWidth; // reinicia la animación de temblor
+  $correo.classList.add("input-error");
+  $correo.focus();
+}
+
+function limpiarErrorCorreo() {
+  $correoError.textContent = "";
+  $correo.removeAttribute("aria-invalid");
+  $correo.classList.remove("input-error");
+}
+
+$correo.addEventListener("input", limpiarErrorCorreo);
+
 // Proceso de validación y pago
 $form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const nombre = document.getElementById("nombre").value.trim();
-  const correo = document.getElementById("correo").value.trim().toLowerCase();
+  const correo = $correo.value.trim().toLowerCase();
   const comprobante = document.getElementById("comprobante").value.trim();
 
-  // Validar correo institucional
-  if (!correo.endsWith("@itc.edu.co")) {
-    alert("Error: Solo se permiten correos institucionales terminados en @itc.edu.co");
+  // Validar formato de correo (acepta @gmail.com, @outlook.com, institucionales, etc.)
+  if (!esCorreoValido(correo)) {
+    mostrarErrorCorreo("Ingresa un correo válido, por ejemplo: nombre@gmail.com");
     return;
   }
 

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Aprende a desarrollar páginas web desde cero - ITC Virtual Store">
   <meta name="author" content="Daniel Salinas">
+  <meta name="theme-color" content="#12181b">
   <title>Papelería & Útiles ETITC</title>
   
   <!-- Favicon (Asegúrate de que la carpeta sea 'images' o 'imagenes' según tu estructura real) -->
@@ -14,7 +15,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- FontAwesome -->
   <script src="https://kit.fontawesome.com/73f851add2.js" crossorigin="anonymous"></script>
@@ -44,21 +45,46 @@
   </header>
 
   <main class="container">
+    <!-- Hero 3D -->
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-txt">
+          <span class="hero-badge"><i class="fa-solid fa-bolt"></i> Recoge en el campus</span>
+          <h1>Tu papelería <span>ETITC</span>, ahora en otra dimensión</h1>
+          <p>Útiles, papelería y todo lo que necesitas para tus clases. Pide en línea, paga con Nequi y recoge sin filas.</p>
+          <a href="#productos" class="btn-primary">Ver catálogo</a>
+        </div>
+
+        <div class="hero-3d" aria-hidden="true">
+          <div class="hero-float">
+            <div class="hero-stack">
+              <div class="hero-layer l1"></div>
+              <div class="hero-layer l2"></div>
+              <div class="hero-layer l3"><i class="fa-solid fa-book-open"></i></div>
+              <span class="hero-chip c1"><i class="fa-solid fa-pen"></i></span>
+              <span class="hero-chip c2"><i class="fa-solid fa-paperclip"></i></span>
+              <span class="hero-chip c3"><i class="fa-solid fa-ruler-combined"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Beneficios Section -->
     <section id="beneficios" class="beneficios">
-      <h2>¿Por qué elegirnos?</h2>
+      <h2 class="reveal">¿Por qué elegirnos?</h2>
       <div class="beneficios-grid">
-        <div class="beneficio-card">
+        <div class="beneficio-card reveal" data-tilt data-tilt-max="8" style="--i:0">
           <i class="fa-solid fa-truck-fast"></i>
           <h3>Envíos Rápidos</h3>
           <p>Entregas directas en el campus, solo tienes que ir a recogerlo.</p>
         </div>
-        <div class="beneficio-card">
+        <div class="beneficio-card reveal" data-tilt data-tilt-max="8" style="--i:1">
           <i class="fa-solid fa-shield-halved"></i>
           <h3>Calidad Garantizada</h3>
           <p>Las mejores marcas de papelería seleccionadas para ti.</p>
         </div>
-        <div class="beneficio-card">
+        <div class="beneficio-card reveal" data-tilt data-tilt-max="8" style="--i:2">
           <i class="fa-solid fa-wallet"></i>
           <h3>Precios Accesibles</h3>
           <p>Descuentos especiales para estudiantes de la comunidad ETITC.</p>
@@ -68,7 +94,7 @@
 
     <!-- Productos Section -->
     <section class="planes-section">
-      <h2>Nuestros Productos</h2>
+      <h2 class="reveal">Nuestros Productos</h2>
       <div id="productos" class="productos-container">
         <p class="cargando">Cargando productos de papelería...</p>
       </div>
@@ -76,7 +102,7 @@
 
     <!-- Formulario de Contacto -->
     <section id="contacto" class="contact">
-      <div class="contact-content">
+      <div class="contact-content reveal">
         <h2>Suscríbete a nuestras ofertas</h2>
         <form>
           <input type="email" placeholder="Ingresa tu correo electrónico" required>
@@ -105,13 +131,15 @@
 
   <!-- Footer -->
   <footer class="footer-container">
-    <p>&copy; Jimmy Beltran - Ivan Salas ITC Virtual Store. Todos los derechos reservados.</p>
+    <p>&copy; Jimmy Beltran - Ivan Salas - Marco Molina - Daniel Daza ITC Virtual Store. Todos los derechos reservados.</p>
   </footer>
 
   <!-- Template para Tarjetas de Productos -->
   <template id="producto-template">
-    <article class="producto-card">
-      <img src="" alt="Producto" />
+    <article class="producto-card reveal" data-tilt>
+      <div class="producto-media">
+        <img src="" alt="Producto" loading="lazy" decoding="async" />
+      </div>
       <div class="producto-info">
         <h3 class="producto-title"></h3>
         <p class="producto-precio"></p>
