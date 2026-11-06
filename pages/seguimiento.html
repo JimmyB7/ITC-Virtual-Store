@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#12181b">
+  <meta name="description" content="Consulta el estado de tu pedido de ETITC Store.">
+  <title>Seguimiento de pedido | ETITC Store</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/73f851add2.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="container nav-container">
+      <a href="../index.html" class="logo">
+        <img src="../assets/images/ETITC.png" alt="Logo ETITC">
+        ETITC <span>Store</span>
+      </a>
+      <input type="checkbox" id="menu">
+      <label for="menu" class="menu-icono"><i class="fa-solid fa-bars"></i></label>
+      <nav class="navbar">
+        <ul>
+          <li><a href="../index.html">Inicio</a></li>
+          <li><a href="../index.html#productos">Catálogo</a></li>
+          <li><a href="seguimiento.html" aria-current="page">Seguimiento</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container seguimiento-container">
+    <section class="seguimiento-card" aria-labelledby="seguimiento-title">
+      <div class="seguimiento-heading">
+        <span class="seguimiento-icon" aria-hidden="true"><i class="fa-solid fa-box"></i></span>
+        <p class="seguimiento-eyebrow">ETITC STORE</p>
+        <h1 id="seguimiento-title">Sigue tu pedido</h1>
+        <p>Ingresa el código único que recibiste al finalizar tu compra para consultar su estado.</p>
+      </div>
+
+      <form id="seguimiento-form" class="seguimiento-form">
+        <label for="codigo-orden">Código único de orden</label>
+        <div class="seguimiento-input-row">
+          <input
+            id="codigo-orden"
+            name="codigo"
+            type="text"
+            placeholder="PED-1A2B3C4D..."
+            aria-describedby="codigo-ayuda seguimiento-mensaje"
+            autocomplete="off"
+            autocapitalize="characters"
+            maxlength="28"
+            required
+          >
+          <button id="seguimiento-submit" class="btn-primary" type="submit">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <span>Consultar</span>
+          </button>
+        </div>
+        <small id="codigo-ayuda">El código distingue tu orden; no ingreses aquí datos personales o de pago.</small>
+      </form>
+
+      <p id="seguimiento-mensaje" class="seguimiento-mensaje" role="status" aria-live="polite"></p>
+
+      <section id="seguimiento-resultado" class="seguimiento-resultado" aria-label="Estado de la orden" hidden>
+        <div class="seguimiento-status-card">
+          <span class="seguimiento-status-label">Estado actual</span>
+          <strong id="estado-orden"></strong>
+          <span id="codigo-resultado" class="seguimiento-code"></span>
+        </div>
+
+        <ol id="seguimiento-timeline" class="seguimiento-timeline">
+          <li class="timeline-step" data-step="0">
+            <span class="timeline-marker"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
+            <div>
+              <h2>Pago de prueba registrado (Bre-B)</h2>
+              <p>La tienda guardó la referencia de prueba. No se verificó una transferencia real.</p>
+            </div>
+          </li>
+          <li class="timeline-step" data-step="1">
+            <span class="timeline-marker"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span>
+            <div>
+              <h2>Preparando en papelería</h2>
+              <p>El equipo está preparando los productos de tu compra.</p>
+            </div>
+          </li>
+          <li class="timeline-step" data-step="2">
+            <span class="timeline-marker"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span>
+            <div>
+              <h2>Listo para recoger</h2>
+              <p>Tu pedido está listo para recogerse en el campus ETITC.</p>
+            </div>
+          </li>
+          <li class="timeline-step" data-step="3">
+            <span class="timeline-marker"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span>
+            <div>
+              <h2>Entregado</h2>
+              <p>El pedido fue marcado como entregado.</p>
+            </div>
+          </li>
+        </ol>
+        <p class="seguimiento-refresh">
+          <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+          El estado se consulta automáticamente cada 20 segundos mientras esta página permanezca abierta.
+        </p>
+      </section>
+
+      <a href="../index.html" class="seguimiento-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Volver a la tienda</a>
+    </section>
+  </main>
+
+  <footer class="footer-container">
+    <p>&copy; ETITC Store. Todos los derechos reservados.</p>
+  </footer>
+
+  <script type="module" src="../js/seguimiento.js"></script>
+</body>
+</html>

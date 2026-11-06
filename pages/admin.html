@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#12181b">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Panel privado de administración de pedidos ETITC Store.">
+  <title>Administración de pedidos | ETITC Store</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/73f851add2.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="container nav-container">
+      <a href="../index.html" class="logo">
+        <img src="../assets/images/ETITC.png" alt="Logo ETITC">
+        ETITC <span>Store</span>
+      </a>
+      <input type="checkbox" id="menu">
+      <label for="menu" class="menu-icono"><i class="fa-solid fa-bars"></i></label>
+      <nav class="navbar admin-navbar">
+        <ul>
+          <li><a href="../index.html">Volver a la tienda</a></li>
+          <li><a href="seguimiento.html">Seguimiento</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container admin-container">
+    <section id="admin-login" class="admin-panel admin-login" aria-labelledby="admin-title">
+      <div class="admin-heading">
+        <span class="admin-icon" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></span>
+        <p class="admin-eyebrow">ETITC STORE</p>
+        <h1 id="admin-title">Administración</h1>
+        <p>Inicia sesión con la cuenta autorizada en Supabase para gestionar los pedidos.</p>
+      </div>
+
+      <form id="admin-login-form" class="admin-login-form">
+        <div class="form-group">
+          <label for="admin-username">Usuario</label>
+          <input id="admin-username" name="username" type="text" value="admin" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="admin-password">Contraseña</label>
+          <input id="admin-password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button id="admin-login-submit" class="btn-primary admin-submit" type="submit">Iniciar sesión</button>
+      </form>
+
+      <p class="admin-login-help">Ingresa el usuario de administrador y la contraseña configurada en Supabase Authentication.</p>
+      <p id="admin-login-message" class="admin-message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="admin-orders" class="admin-panel admin-orders" aria-labelledby="admin-orders-title" hidden>
+      <div class="admin-orders-header">
+        <div>
+          <p class="admin-eyebrow">PANEL PRIVADO</p>
+          <h1 id="admin-orders-title">Pedidos</h1>
+          <p id="admin-session-user" class="admin-session-user"></p>
+        </div>
+        <div class="admin-toolbar">
+          <button id="admin-refresh" class="admin-secondary-button" type="button">
+            <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+            <span>Actualizar</span>
+          </button>
+          <button id="admin-logout" class="admin-secondary-button" type="button">
+            <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+      </div>
+
+      <section class="admin-order-search" aria-labelledby="admin-order-search-title">
+        <div class="admin-order-search-intro">
+          <span class="admin-search-icon" aria-hidden="true">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </span>
+          <div class="admin-search-copy">
+            <p class="admin-search-eyebrow">BÚSQUEDA RÁPIDA</p>
+            <h2 id="admin-order-search-title">Encuentra un pedido</h2>
+            <p>Busca por el código completo o escribe solo una parte.</p>
+          </div>
+        </div>
+        <div class="admin-search-field">
+          <label for="admin-order-search-input">Número de orden</label>
+          <div class="admin-search-control">
+            <i class="fa-solid fa-hashtag" aria-hidden="true"></i>
+            <input
+              id="admin-order-search-input"
+              type="search"
+              placeholder="Ej. PED-123456"
+              autocomplete="off"
+              aria-controls="admin-orders-list"
+            >
+            <button id="admin-order-search-clear" class="admin-search-clear" type="button" aria-label="Limpiar búsqueda" title="Limpiar búsqueda" hidden>
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+          </div>
+          <p class="admin-search-hint">Los resultados se actualizan mientras escribes.</p>
+        </div>
+      </section>
+
+      <p id="admin-orders-message" class="admin-message" role="status" aria-live="polite"></p>
+      <div id="admin-orders-list" class="admin-orders-list" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="footer-container">
+    <p>&copy; ETITC Store. Panel de administración.</p>
+  </footer>
+
+  <script type="module" src="../js/admin.js"></script>
+</body>
+</html>

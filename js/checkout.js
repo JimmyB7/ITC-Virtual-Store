@@ -22,7 +22,7 @@ const FormatoDeMoneda = (num) => {
 
 // Si el carrito está vacío, volver al inicio
 if (carrito.length === 0) {
-  window.location.href = "./index.html";
+  window.location.href = "../index.html";
 }
 
 const totalCalculado = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
@@ -38,6 +38,13 @@ initEfectos3D();
 const REGEX_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const esCorreoValido = (correo) => correo.length <= 254 && REGEX_CORREO.test(correo);
+
+function generarCodigoOrden() {
+  const bytes = new Uint8Array(12);
+  crypto.getRandomValues(bytes);
+  const codigoAleatorio = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("").toUpperCase();
+  return `PED-${codigoAleatorio}`;
+}
 
 function mostrarErrorCorreo(mensaje) {
   $correoError.textContent = mensaje;
@@ -72,15 +79,15 @@ $form.addEventListener("submit", async (e) => {
 
   const $btn = document.getElementById("btn-confirmar-pago");
   $btn.disabled = true;
-  $btn.textContent = "Verificando transferencia Nequi...";
+  $btn.textContent = "Registrando pago de prueba...";
 
-  // Simulación de delay de verificación automática de la transacción (2.5 segundos)
+  // El flujo es una demostración y no consulta ni confirma transacciones bancarias.
   setTimeout(async () => {
     try {
       // Generar un código único para la orden
-      const codigoOrden = 'PED-' + Math.floor(100000 + Math.random() * 900000);
+      const codigoOrden = generarCodigoOrden();
 
-      // Registrar en Supabase la orden verificada incluyendo código y franja horaria requerida
+      // Registrar la orden como pago simulado; la referencia no se verifica con un banco.
       const { data, error } = await supabase
         .from("ordenes")
         .insert([
@@ -89,12 +96,12 @@ $form.addEventListener("submit", async (e) => {
             franja_horaria: "General",
             items: carrito,
             total: totalCalculado,
-            estado: "VERIFICADO_NEQUI",
+            estado: "PAGO_SIMULADO",
             comprador: {
               nombre: nombre,
               correo: correo,
-              metodo_pago: "QR_NEQUI",
-              referencia_nequi: comprobante
+              metodo_pago: "BRE_B_SIMULADO",
+              referencia_pago: comprobante
             }
           }
         ])
@@ -106,13 +113,13 @@ $form.addEventListener("submit", async (e) => {
       localStorage.removeItem("carritoETITC");
 
       // Redirigir a pantalla de confirmación
-      window.location.href = "./success.html";
+      window.location.href = `../pages/success.html?orden=${encodeURIComponent(codigoOrden)}`;
 
     } catch (err) {
-      console.error("Error al verificar el pago:", err);
-      alert("Error al validar el pago con Nequi: " + err.message);
+      console.error("Error al registrar el pago de prueba:", err);
+      alert("Error al registrar el pago de prueba: " + err.message);
       $btn.disabled = false;
-      $btn.textContent = "Verificar y Finalizar Pago";
+      $btn.textContent = "Registrar pago de prueba";
     }
   }, 2500);
 });

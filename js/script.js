@@ -39,7 +39,8 @@ async function cargarProductos() {
             const clone = productoTemplate.content.cloneNode(true);
             const card = clone.querySelector('.producto-card');
 
-            clone.querySelector('img').src = producto.imagen || 'images/default.png';
+            const rutaImagen = producto.imagen || 'assets/images/ETITC.png';
+            clone.querySelector('img').src = rutaImagen.replace(/^\.?\/?images\//, 'assets/images/');
             clone.querySelector('img').alt = producto.nombre;
             clone.querySelector('.producto-title').textContent = producto.nombre;
             clone.querySelector('.producto-precio').textContent = `$${Number(producto.precio).toLocaleString()}`;
@@ -153,7 +154,7 @@ function procederAlCheckout(e) {
     // Usar la misma llave de almacenamiento que lee el checkout.js
     localStorage.setItem('carritoETITC', JSON.stringify(carrito));
     
-    window.location.href = 'checkout.html';
+    window.location.href = 'pages/checkout.html';
 }
 
 document.addEventListener('DOMContentLoaded', () => {

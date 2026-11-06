@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Pago Exitoso! | ETITC Store</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/73f851add2.js" crossorigin="anonymous"></script>
+  <style>
+    .success-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 85vh;
+      text-align: center;
+      padding: 20px;
+    }
+    .success-icon {
+      font-size: 5rem;
+      color: var(--green-primary);
+      margin-bottom: 20px;
+    }
+    .success-title {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+    .success-message {
+      color: var(--text-muted);
+      margin-bottom: 30px;
+      max-width: 500px;
+    }
+    .success-order-code {
+      display: none;
+      margin: 0 0 24px;
+      padding: 14px 20px;
+      border: 1px solid rgba(46, 204, 113, 0.35);
+      border-radius: 12px;
+      background: rgba(46, 204, 113, 0.08);
+      color: var(--text-color);
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      overflow-wrap: anywhere;
+    }
+    .success-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+    .success-actions .btn-primary {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container success-container">
+    <i class="fa-solid fa-circle-check success-icon"></i>
+    <h1 class="success-title">¡Pedido de prueba registrado!</h1>
+    <p class="success-message">El flujo simulado de pago por Bre-B terminó correctamente. No se realizó ni verificó una transferencia real. Guarda este código para consultar el estado del pedido.</p>
+    <p id="success-order-code" class="success-order-code" aria-live="polite"></p>
+    <div class="success-actions">
+      <a id="success-tracking-link" href="seguimiento.html" class="btn-primary">Seguir mi pedido</a>
+      <a href="../index.html" class="btn-primary">Volver a la Tienda</a>
+    </div>
+  </main>
+
+  <script>
+    const codigoOrden = new URLSearchParams(window.location.search).get("orden");
+    const codigoVisible = document.getElementById("success-order-code");
+    const enlaceSeguimiento = document.getElementById("success-tracking-link");
+
+    if (codigoOrden && /^PED-[A-F0-9]{24}$/i.test(codigoOrden)) {
+      codigoVisible.textContent = `Código de orden: ${codigoOrden.toUpperCase()}`;
+      codigoVisible.style.display = "block";
+      enlaceSeguimiento.href = `seguimiento.html?codigo=${encodeURIComponent(codigoOrden.toUpperCase())}`;
+    } else {
+      codigoVisible.textContent = "No se encontró el código de esta orden. Si ya guardaste tu código, ingrésalo en la página de seguimiento.";
+      codigoVisible.style.display = "block";
+    }
+  </script>
+</body>
+</html>
