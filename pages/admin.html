@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#12181b">
   <meta name="robots" content="noindex, nofollow">
   <meta name="description" content="Panel privado de administración de pedidos ETITC Store.">
-  <title>Administración de pedidos | ETITC Store</title>
+  <title>Dashboard de administración | ETITC Store</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,56 +57,185 @@
     </section>
 
     <section id="admin-orders" class="admin-panel admin-orders" aria-labelledby="admin-orders-title" hidden>
-      <div class="admin-orders-header">
-        <div>
-          <p class="admin-eyebrow">PANEL PRIVADO</p>
-          <h1 id="admin-orders-title">Pedidos</h1>
-          <p id="admin-session-user" class="admin-session-user"></p>
-        </div>
-        <div class="admin-toolbar">
-          <button id="admin-refresh" class="admin-secondary-button" type="button">
-            <i class="fa-solid fa-rotate" aria-hidden="true"></i>
-            <span>Actualizar</span>
-          </button>
-          <button id="admin-logout" class="admin-secondary-button" type="button">
-            <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
-            <span>Cerrar sesión</span>
-          </button>
+      <div class="admin-layout">
+        <aside class="admin-sidebar" aria-label="Navegación de administración">
+          <p class="admin-sidebar-label">MENÚ PRINCIPAL</p>
+          <nav class="admin-side-nav">
+            <button class="admin-nav-button active" type="button" data-admin-view="dashboard" aria-current="page">
+              <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
+              <span>Dashboard</span>
+            </button>
+            <button class="admin-nav-button" type="button" data-admin-view="orders">
+              <i class="fa-solid fa-box" aria-hidden="true"></i>
+              <span>Pedidos</span>
+              <span id="admin-nav-order-count" class="admin-nav-count">0</span>
+            </button>
+            <a class="admin-nav-button" href="../index.html">
+              <i class="fa-solid fa-store" aria-hidden="true"></i>
+              <span>Ir a la tienda</span>
+            </a>
+          </nav>
+        </aside>
+        <div class="admin-workspace">
+          <header class="admin-orders-header">
+            <div>
+              <p class="admin-eyebrow">PANEL PRIVADO</p>
+              <h1 id="admin-orders-title">Dashboard</h1>
+              <p id="admin-session-user" class="admin-session-user"></p>
+            </div>
+            <div class="admin-toolbar">
+              <button id="admin-export" class="admin-secondary-button" type="button" title="Exportar todos los pedidos registrados">
+                <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i>
+                <span>Exportar CSV</span>
+              </button>
+              <button id="admin-refresh" class="admin-secondary-button" type="button">
+                <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+                <span>Actualizar</span>
+              </button>
+              <button id="admin-logout" class="admin-secondary-button" type="button">
+                <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+                <span>Cerrar sesión</span>
+              </button>
+            </div>
+          </header>
+
+          <p id="admin-orders-message" class="admin-message" role="status" aria-live="polite"></p>
+
+          <section id="admin-dashboard" class="admin-view" aria-labelledby="admin-dashboard-title">
+            <div class="admin-view-intro">
+              <div>
+                <h2 id="admin-dashboard-title">Resumen de la tienda</h2>
+                <p>Indicadores calculados a partir de los pedidos registrados.</p>
+              </div>
+              <span class="admin-live-indicator"><i class="fa-solid fa-circle" aria-hidden="true"></i> Datos actuales</span>
+            </div>
+
+            <div class="admin-metrics">
+              <article class="admin-metric-card">
+                <span class="admin-metric-icon"><i class="fa-solid fa-receipt" aria-hidden="true"></i></span>
+                <p>Total de pedidos</p>
+                <strong id="admin-metric-total">0</strong>
+                <span>Pedidos registrados</span>
+              </article>
+              <article class="admin-metric-card">
+                <span class="admin-metric-icon warning"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span>
+                <p>Por preparar</p>
+                <strong id="admin-metric-preparing">0</strong>
+                <span>Requieren atención</span>
+              </article>
+              <article class="admin-metric-card">
+                <span class="admin-metric-icon blue"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span>
+                <p>Listos para recoger</p>
+                <strong id="admin-metric-ready">0</strong>
+                <span>Esperando al cliente</span>
+              </article>
+              <article class="admin-metric-card">
+                <span class="admin-metric-icon purple"><i class="fa-solid fa-coins" aria-hidden="true"></i></span>
+                <p>Valor de pedidos</p>
+                <strong id="admin-metric-value">$ 0</strong>
+                <span>Valor registrado, no pagos verificados</span>
+              </article>
+            </div>
+
+            <div class="admin-dashboard-grid">
+              <section class="admin-dashboard-card" aria-labelledby="admin-status-title">
+                <div class="admin-card-heading">
+                  <div>
+                    <p class="admin-card-eyebrow">OPERACIÓN</p>
+                    <h2 id="admin-status-title">Estado de los pedidos</h2>
+                  </div>
+                  <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
+                </div>
+                <div id="admin-status-summary" class="admin-status-summary"></div>
+              </section>
+              <section class="admin-dashboard-card admin-quick-actions" aria-labelledby="admin-actions-title">
+                <div class="admin-card-heading">
+                  <div>
+                    <p class="admin-card-eyebrow">ACCESO RÁPIDO</p>
+                    <h2 id="admin-actions-title">Gestiona tu tienda</h2>
+                  </div>
+                  <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+                </div>
+                <button class="admin-action-link" type="button" data-admin-view="orders">
+                  <span class="admin-action-icon"><i class="fa-solid fa-list-check" aria-hidden="true"></i></span>
+                  <span><strong>Gestionar pedidos</strong><small>Buscar y actualizar estados</small></span>
+                  <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </button>
+                <button id="admin-review-preparing" class="admin-action-link" type="button" data-admin-filter="pending">
+                  <span class="admin-action-icon orange"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span>
+                  <span><strong>Ver pedidos por preparar</strong><small>Atiende las órdenes pendientes</small></span>
+                  <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </button>
+                <button id="admin-review-ready" class="admin-action-link" type="button" data-admin-filter="LISTO_PARA_RECOGER">
+                  <span class="admin-action-icon blue"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span>
+                  <span><strong>Ver pedidos listos</strong><small>Consulta los pedidos para recoger</small></span>
+                  <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </button>
+              </section>
+              <section class="admin-dashboard-card admin-product-performance" aria-labelledby="admin-products-title">
+                <div class="admin-card-heading">
+                  <div>
+                    <p class="admin-card-eyebrow">INVENTARIO</p>
+                    <h2 id="admin-products-title">Productos más pedidos</h2>
+                  </div>
+                  <i class="fa-solid fa-chart-column" aria-hidden="true"></i>
+                </div>
+                <p class="admin-product-note">Usa esta información para planear reposiciones. Los valores corresponden a los pedidos registrados.</p>
+                <div id="admin-product-summary" class="admin-product-summary" aria-live="polite"></div>
+              </section>
+            </div>
+          </section>
+
+          <section id="admin-orders-view" class="admin-view" aria-labelledby="admin-order-search-title" hidden>
+            <div class="admin-view-intro">
+              <div>
+                <h2>Gestionar pedidos</h2>
+                <p>Busca, filtra y actualiza el estado de cada orden.</p>
+              </div>
+              <span id="admin-filtered-count" class="admin-filtered-count">0 pedidos</span>
+            </div>
+
+            <section class="admin-order-search" aria-labelledby="admin-order-search-title">
+              <div class="admin-order-search-intro">
+                <span class="admin-search-icon" aria-hidden="true">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <div class="admin-search-copy">
+                  <p class="admin-search-eyebrow">BÚSQUEDA Y FILTROS</p>
+                  <h2 id="admin-order-search-title">Encuentra un pedido</h2>
+                  <p>Busca por código, cliente o correo.</p>
+                </div>
+              </div>
+              <div class="admin-search-fields">
+                <div class="admin-search-field">
+                  <label for="admin-order-search-input">Pedido o cliente</label>
+                  <div class="admin-search-control">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <input
+                      id="admin-order-search-input"
+                      type="search"
+                      placeholder="Ej. PED-123456 o nombre"
+                      autocomplete="off"
+                      aria-controls="admin-orders-list"
+                    >
+                    <button id="admin-order-search-clear" class="admin-search-clear" type="button" aria-label="Limpiar búsqueda" title="Limpiar búsqueda" hidden>
+                      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="admin-search-field">
+                  <label for="admin-order-status-filter">Estado del pedido</label>
+                  <select id="admin-order-status-filter" class="admin-status-filter">
+                    <option value="">Todos los estados</option>
+                  </select>
+                </div>
+              </div>
+            </section>
+
+            <div id="admin-orders-list" class="admin-orders-list" aria-live="polite"></div>
+          </section>
         </div>
       </div>
-
-      <section class="admin-order-search" aria-labelledby="admin-order-search-title">
-        <div class="admin-order-search-intro">
-          <span class="admin-search-icon" aria-hidden="true">
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </span>
-          <div class="admin-search-copy">
-            <p class="admin-search-eyebrow">BÚSQUEDA RÁPIDA</p>
-            <h2 id="admin-order-search-title">Encuentra un pedido</h2>
-            <p>Busca por el código completo o escribe solo una parte.</p>
-          </div>
-        </div>
-        <div class="admin-search-field">
-          <label for="admin-order-search-input">Número de orden</label>
-          <div class="admin-search-control">
-            <i class="fa-solid fa-hashtag" aria-hidden="true"></i>
-            <input
-              id="admin-order-search-input"
-              type="search"
-              placeholder="Ej. PED-123456"
-              autocomplete="off"
-              aria-controls="admin-orders-list"
-            >
-            <button id="admin-order-search-clear" class="admin-search-clear" type="button" aria-label="Limpiar búsqueda" title="Limpiar búsqueda" hidden>
-              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-            </button>
-          </div>
-          <p class="admin-search-hint">Los resultados se actualizan mientras escribes.</p>
-        </div>
-      </section>
-
-      <p id="admin-orders-message" class="admin-message" role="status" aria-live="polite"></p>
-      <div id="admin-orders-list" class="admin-orders-list" aria-live="polite"></div>
     </section>
   </main>
 
